@@ -1,3 +1,15 @@
+###########################
+# Eclipse generated files #
+###########################
+.metadata/
+.project
+.classpath
+.settings
+.checkstyle
+.externalToolBuilders
+bin/
+classes/
+
 *.class
 
 # Mobile Tools for Java (J2ME)
