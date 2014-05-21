@@ -1,6 +1,8 @@
 package com.ordermatcher.service;
 
 import java.util.Iterator;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import com.ordermatcher.model.OrderItem;
 import com.ordermatcher.service.rules.ITradingRulesEngine;
@@ -11,21 +13,72 @@ public class TradingRulesEngine implements ITradingRulesEngine<OrderItem> {
 
 	private SortedBook<OrderItem> book;
 	
+	/**
+	 * 
+	 * @param book
+	 */
 	public TradingRulesEngine(SortedBook<OrderItem> book) {
 		this.book = book;
 	}
 
 	@Override
 	public String calculateTrading(OrderItem orderItem) {
-		Iterator<SortedItem<OrderItem>> iterator = book.getSortedItemSet().iterator();
-		while (iterator.hasNext()){
-			SortedItem<OrderItem> item = iterator.next();
-			item.getItem();
+		SortedSet<SortedItem<OrderItem>>  sortedItemSetShadow = new TreeSet<SortedItem<OrderItem>>(book.getSortedItemSet()); 
+		
+		Iterator<SortedItem<OrderItem>> iterator = sortedItemSetShadow.iterator();
+		
+		float price = orderItem.getPrice();
+		int amount = orderItem.getAmount();
 				
+		int amountCheck = 1;
+		int index = -1;
+		
+		do{
+		
+			SortedItem<OrderItem> item = iterator.next();
+			if (item != null){
+
+				amountCheck = checkForAMatch(item, price, amount) ;
+				
+				iterator.remove();
+				
+				item = iterator.next();
+				
+				index++;//Index number of the sorted book
+				
+			}else{
+				amountCheck = 0;
+			}
+			
+		}while (amountCheck == Integer.MIN_VALUE || amountCheck == 0 );
+
+		if (index > -1){
+			System.out.println(sortedItemSetShadow.size());
 		}
 		
 		return null;
 	}
 	
+	/**
+	 * 
+	 * @return
+	 */
+	private int checkForAMatch(SortedItem<OrderItem> item, float price, int amount){
+		
+		//1. Look if the price is  higher or equal to the sorted element 
+		if (item.getItem().getPrice() <= price){
+			item.getItem().setAmount(item.getItem().getAmount() - amount);
+			
+			if (item.getItem().getAmount() < 0){
+				item.getItem().setAmount(0);
+			}
+			
+			return item.getItem().getAmount();
+		}
+		
+		
+		return Integer.MIN_VALUE;
+		
+	}
 	
 }
