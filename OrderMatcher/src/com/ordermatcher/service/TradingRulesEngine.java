@@ -5,7 +5,6 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import com.ordermatcher.presentation.OrderMatcherConstants;
-import com.ordermatcher.service.rules.IItemModel;
 import com.ordermatcher.service.rules.ITradingRulesEngine;
 import com.ordermatcher.service.rules.SortedBook;
 import com.ordermatcher.service.rules.SortedItem;
