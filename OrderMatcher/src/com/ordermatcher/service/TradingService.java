@@ -26,11 +26,16 @@ public class TradingService implements ITradingService {
 		//1. Convert to SortedItem
 		SortedItem sortedItem = buildSortedItem(item, index);
 		
-		//2 Add to Sorted Book
-		addSortedItemToBook(sortedItem);
+		//2. check for trading 
+		String output = rulesEngine.calculateTrading(sortedItem);		
 		
-		//3. check for trading 
-		String output = rulesEngine.calculateTrading(sortedItem);
+		//3 Add to Sorted Book
+		if (output == null ){
+			addSortedItemToBook(sortedItem);
+		}
+		
+		
+
 		
 		return output;
 	}

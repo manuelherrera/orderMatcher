@@ -1,6 +1,8 @@
 package com.ordermatcher.service;
 
+import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -28,6 +30,8 @@ public class TradingRulesEngine implements ITradingRulesEngine {
 		String returnValue = null;
 		
 		SortedSet<SortedItem>  sortedItemSetShadow = null;
+		Collection<SortedItem> removeItemList = new LinkedList<SortedItem>();
+		
 		// Obtain code
 		String code = orderItem.getItem().getCode();
 		
@@ -41,7 +45,7 @@ public class TradingRulesEngine implements ITradingRulesEngine {
 		}else{
 			return null; // Save check and not accept other codes besides BUY and SELL
 		}
-		if (book.getSellSet().size() == 0 || book.getBuySet().size() == 0){
+		if (sortedItemSetShadow.size() == 0){
 			return null;
 		}
 		
@@ -66,17 +70,23 @@ public class TradingRulesEngine implements ITradingRulesEngine {
 				amountCheck = checkForABuyMatch(item, price, amount);
 			}
 			
-			if (amountCheck >= 0){
+			if (amountCheck > 0){
 				output.append(OrderMatcherConstants.TRADE).append( "\t").
 					   append(tradeAmount - amountCheck).append("@").
 					   append(tradePrice).append("\n");
-				iterator.remove();
+				
+			}else if(amountCheck == 0){
+				removeItemList.add(item);
 			}
 			//Pending 
 			amount = amount - tradeAmount;
 			
 		}while (amountCheck != Integer.MIN_VALUE && amount >= 0 );
 
+		iterator = null;
+		
+		//Remove sorted items
+		sortedItemSetShadow.removeAll(removeItemList);
 		if (amountCheck == Integer.MIN_VALUE){
 			if (code.equals(OrderMatcherConstants.BUY)){
 				book.getBuySet().add(orderItem);	
@@ -88,9 +98,9 @@ public class TradingRulesEngine implements ITradingRulesEngine {
 		}else if(amount < 0){
 			
 			if (code.equals(OrderMatcherConstants.BUY)){
-				book.setBuySet(sortedItemSetShadow);	
+				book.setSellSet(sortedItemSetShadow);	
 			}else if(code.equals(OrderMatcherConstants.SELL)){
-				book.setSellSet(sortedItemSetShadow);
+				book.setBuySet(sortedItemSetShadow);
 			}
 			
 			returnValue = output.toString();
