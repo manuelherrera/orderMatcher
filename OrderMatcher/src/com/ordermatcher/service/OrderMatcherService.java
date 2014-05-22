@@ -11,7 +11,7 @@ public class OrderMatcherService {
 	private static OrderItemBook book = new OrderItemBook();
 	
 	public void addToOrderItemBook(OrderItem orderItem){
-		//1. Add item into the order book
+		//1. Add item into the order book to save all the transactions
 		book.addOrderItem(orderItem);
 		
 		//2.  
