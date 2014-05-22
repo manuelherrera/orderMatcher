@@ -1,7 +1,7 @@
 package com.ordermatcher.service.rules;
 
 
-public interface Identificable {
+public interface Identifiable {
  
 	public String getId();
  
