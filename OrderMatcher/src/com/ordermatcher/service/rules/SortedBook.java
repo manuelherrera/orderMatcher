@@ -9,7 +9,7 @@ public class SortedBook{
 	private SortedSet<SortedItem> sortedItemSet;
 	
 	public SortedBook(ItemModelComparator itemComparator) {
-		sortedItemSet = new TreeSet<SortedItem>();
+		sortedItemSet = new TreeSet<SortedItem>(itemComparator);
 	}
 
 	public SortedSet<SortedItem> getSortedItemSet() {

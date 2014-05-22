@@ -3,11 +3,10 @@ package com.ordermatcher.service;
 import com.ordermatcher.model.OrderItem;
 import com.ordermatcher.model.OrderItemBook;
 import com.ordermatcher.service.rules.ITradingService;
-import com.ordermatcher.service.rules.SortedItem;
 
 public class OrderMatcherService {
 
-	private static ITradingService<SortedItem> tradingService = (ITradingService<SortedItem>) new TradingService();
+	private static ITradingService tradingService =  new TradingService();
 			
 	private static OrderItemBook book = new OrderItemBook();
 	

@@ -4,12 +4,12 @@ import java.util.Iterator;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import com.ordermatcher.model.OrderItem;
+import com.ordermatcher.service.rules.IItemModel;
 import com.ordermatcher.service.rules.ITradingRulesEngine;
 import com.ordermatcher.service.rules.SortedBook;
 import com.ordermatcher.service.rules.SortedItem;
 
-public class TradingRulesEngine implements ITradingRulesEngine<SortedItem> {
+public class TradingRulesEngine implements ITradingRulesEngine {
 
 	private SortedBook book;
 	
@@ -22,13 +22,13 @@ public class TradingRulesEngine implements ITradingRulesEngine<SortedItem> {
 	}
 
 	@Override
-	public String calculateTrading(SortedItem orderItem) {
+	public String calculateTrading(IItemModel orderItem) {
 		SortedSet<SortedItem>  sortedItemSetShadow = new TreeSet<SortedItem>(book.getSortedItemSet()); 
 		
 		Iterator<SortedItem> iterator = sortedItemSetShadow.iterator();
 		
-		float price = orderItem.getItem().getPrice();
-		int amount = orderItem.getItem().getAmount();
+		float price = orderItem.getPrice();
+		int amount = orderItem.getAmount();
 				
 		int amountCheck = 1;
 		int index = -1;

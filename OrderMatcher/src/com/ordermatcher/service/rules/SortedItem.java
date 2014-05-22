@@ -3,11 +3,11 @@ package com.ordermatcher.service.rules;
 
 public class SortedItem {
 
-	private IModel item;
+	private IItemModel item;
 	private String id;
 	
 	
-	public SortedItem(IModel item, String id) {
+	public SortedItem(IItemModel item, String id) {
 		this.item = item;
 		this.id = id;
 	}
@@ -16,7 +16,7 @@ public class SortedItem {
 		return this.id;
 	}
 	
-	public IModel getItem(){
+	public IItemModel getItem(){
 		return item;
 	}
 	
