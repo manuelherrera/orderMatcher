@@ -1,6 +1,8 @@
 package com.ordermatcher.model;
 
-public class OrderItem {
+import com.ordermatcher.service.rules.IItemModel;
+
+public class OrderItem implements IItemModel{
 	
 	private String code;
 	private int amount;
@@ -19,7 +21,7 @@ public class OrderItem {
 	public void setAmount(int amount) {
 		this.amount = amount;
 	}
-	public float getPrice() {
+	public int getPrice() {
 		return price;
 	}
 	public void setPrice(int price) {
@@ -41,7 +43,9 @@ public class OrderItem {
 	public boolean equals(Object obj) {
 		boolean flag = false;
 		OrderItem orderItem = (OrderItem) obj;
-		if ((orderItem.getAmount() == amount) && (orderItem.getPrice() == price)){
+		if ((orderItem.getAmount() == amount) && 
+			(orderItem.getCode().equalsIgnoreCase(code)) && 
+			(orderItem.getPrice() == price)){
 			flag = true;
 		}
 		return flag;

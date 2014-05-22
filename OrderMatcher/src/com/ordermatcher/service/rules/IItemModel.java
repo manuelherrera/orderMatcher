@@ -7,8 +7,8 @@ public interface IItemModel {
 	public int getAmount();
 	public int getPrice();
 	
-	public void setCode();
-	public void setAmount();
-	public void setPrice();
+	public void setCode(String code);
+	public void setAmount(int amount) ;
+	public void setPrice(int price);
  
 }
