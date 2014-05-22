@@ -1,5 +1,6 @@
 package com.ordermatcher.model;
 
+import com.ordermatcher.presentation.OrderMatcherConstants;
 import com.ordermatcher.service.rules.IItemModel;
 
 public class OrderItem implements IItemModel{
@@ -31,7 +32,13 @@ public class OrderItem implements IItemModel{
 	
 	@Override
 	public String toString() {
-		return  (code + " " + this.amount + "@" + this.price);
+		
+		String returnValue = code;
+		
+		if (!OrderMatcherConstants.PRINT.equalsIgnoreCase(code)){
+			returnValue = (code + "\t" + this.amount + "@" + this.price);
+		}
+		return  returnValue;
 	}
 	
 	@Override
@@ -42,6 +49,9 @@ public class OrderItem implements IItemModel{
 	@Override
 	public boolean equals(Object obj) {
 		boolean flag = false;
+		if (obj == null){
+			return flag;
+		}
 		OrderItem orderItem = (OrderItem) obj;
 		if ((orderItem.getAmount() == amount) && 
 			(orderItem.getCode().equalsIgnoreCase(code)) && 

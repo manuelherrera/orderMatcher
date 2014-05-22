@@ -31,7 +31,7 @@ public class OrderMatcherService {
 		}
 
 		
-		return output;
+		return (output == null  ?  "" : output);
 		
 	}
 	

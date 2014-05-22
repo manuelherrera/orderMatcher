@@ -38,7 +38,10 @@ public class TradingRulesEngine implements ITradingRulesEngine {
 		}else{
 			return null; // Save check and not accept other codes besides BUY and SELL
 		}
-				
+		if (book.getSellSet().size() == 0 || book.getBuySet().size() == 0){
+			return null;
+		}
+		
 		Iterator<SortedItem> iterator = sortedItemSetShadow.iterator();
 		
 		float price = orderItem.getItem().getPrice();
@@ -61,15 +64,15 @@ public class TradingRulesEngine implements ITradingRulesEngine {
 			}
 			
 			if (amountCheck >= 0){
-				output.append(OrderMatcherConstants.TRADE).append( " ").
-					   append(tradeAmount + amountCheck).append("@").
-					   append(tradePrice);
+				output.append(OrderMatcherConstants.TRADE).append( "\t").
+					   append(tradeAmount - amountCheck).append("@").
+					   append(tradePrice).append("\n");
 				iterator.remove();
 			}
 			//Pending 
-			amount = amountCheck;
+			amount = amount - tradeAmount;
 			
-		}while (amountCheck == Integer.MIN_VALUE || amount == 0 );
+		}while (amountCheck != Integer.MIN_VALUE && amount >= 0 );
 
 		if (amountCheck == Integer.MIN_VALUE){
 			if (code.endsWith(OrderMatcherConstants.BUY)){
@@ -79,7 +82,7 @@ public class TradingRulesEngine implements ITradingRulesEngine {
 			}	
 			//returnValue = null;
 			output.setLength(0);
-		}else if(amount == 0){
+		}else if(amount < 0){
 			returnValue = output.toString();
 		}
 
