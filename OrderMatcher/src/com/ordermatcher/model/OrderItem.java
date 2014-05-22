@@ -6,6 +6,7 @@ public class OrderItem {
 	private int amount;
 	private int price;
 	
+	
 	public String getCode() {
 		return code;
 	}
