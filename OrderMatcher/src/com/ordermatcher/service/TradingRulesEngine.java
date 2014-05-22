@@ -6,6 +6,7 @@ import java.util.TreeSet;
 
 import com.ordermatcher.presentation.OrderMatcherConstants;
 import com.ordermatcher.service.rules.ITradingRulesEngine;
+import com.ordermatcher.service.rules.ItemModelComparator;
 import com.ordermatcher.service.rules.SortedBook;
 import com.ordermatcher.service.rules.SortedItem;
 
@@ -31,10 +32,12 @@ public class TradingRulesEngine implements ITradingRulesEngine {
 		String code = orderItem.getItem().getCode();
 		
 		//Check for SELL OR BUY
-		if (code.endsWith(OrderMatcherConstants.BUY)){
-			sortedItemSetShadow = new TreeSet<SortedItem>(book.getSellSet()); 
-		}else if(code.endsWith(OrderMatcherConstants.SELL)){
-			sortedItemSetShadow = new TreeSet<SortedItem>(book.getBuySet());
+		if (code.equals(OrderMatcherConstants.BUY)){
+			sortedItemSetShadow = new TreeSet<SortedItem>(new ItemModelComparator()); 
+			sortedItemSetShadow.addAll(book.getSellSet());
+		}else if(code.equals(OrderMatcherConstants.SELL)){
+			sortedItemSetShadow = new TreeSet<SortedItem>(new ItemModelComparator());
+			sortedItemSetShadow.addAll(book.getBuySet());
 		}else{
 			return null; // Save check and not accept other codes besides BUY and SELL
 		}
@@ -57,9 +60,9 @@ public class TradingRulesEngine implements ITradingRulesEngine {
 			int tradePrice = item.getItem().getPrice(); 
 			int tradeAmount = item.getItem().getAmount();
 			
-			if (code.endsWith(OrderMatcherConstants.BUY)){
+			if (code.equals(OrderMatcherConstants.BUY)){
 				amountCheck = checkForASellMatch(item, price, amount);	
-			}else if(code.endsWith(OrderMatcherConstants.SELL)){
+			}else if(code.equals(OrderMatcherConstants.SELL)){
 				amountCheck = checkForABuyMatch(item, price, amount);
 			}
 			
@@ -75,14 +78,21 @@ public class TradingRulesEngine implements ITradingRulesEngine {
 		}while (amountCheck != Integer.MIN_VALUE && amount >= 0 );
 
 		if (amountCheck == Integer.MIN_VALUE){
-			if (code.endsWith(OrderMatcherConstants.BUY)){
+			if (code.equals(OrderMatcherConstants.BUY)){
 				book.getBuySet().add(orderItem);	
-			}else if(code.endsWith(OrderMatcherConstants.SELL)){
+			}else if(code.equals(OrderMatcherConstants.SELL)){
 				book.getSellSet().add(orderItem);
 			}	
 			//returnValue = null;
 			output.setLength(0);
 		}else if(amount < 0){
+			
+			if (code.equals(OrderMatcherConstants.BUY)){
+				book.setBuySet(sortedItemSetShadow);	
+			}else if(code.equals(OrderMatcherConstants.SELL)){
+				book.setSellSet(sortedItemSetShadow);
+			}
+			
 			returnValue = output.toString();
 		}
 

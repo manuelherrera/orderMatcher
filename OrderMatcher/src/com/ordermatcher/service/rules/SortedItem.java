@@ -23,8 +23,10 @@ public class SortedItem {
 	@Override
 	public String toString() {
 		StringBuilder output = new StringBuilder();
-		output.append("item: "+ item.toString() +"\t")
-			  .append("id: " + id + "\n");
+		if (item != null){
+			output.append(item.toString());
+		}
+		
 		return output.toString();
 	}
 	

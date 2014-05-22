@@ -65,11 +65,12 @@ public class SortedBook{
 		//Sell stack
 		Iterator<SortedItem> iterator = sellSet.iterator();
 		StringBuilder output = new StringBuilder();
+		output.append("--------------SELL---------------\n");
 		while (iterator.hasNext()){
 			output.append(iterator.next().toString()).append("\n");
 		}
 		
-		output.append("-----------------------------\n");
+		output.append("--------------BUY---------------\n");
 		
 		//Buy Stack
 		iterator = buySet.iterator();
