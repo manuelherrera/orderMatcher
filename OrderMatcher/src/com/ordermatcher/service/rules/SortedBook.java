@@ -6,28 +6,28 @@ import java.util.TreeSet;
 
 public class SortedBook<T>{
 
-	private SortedSet<SortedItem<T>> sortedItemSet;
+	private SortedSet<SortedItem<T>> sortedItemBuySet;
+	private SortedSet<SortedItem<T>> sortedItemSellSet;
 	
 	public SortedBook(ItemComparator<T> itemComparator) {
-		sortedItemSet = new TreeSet<SortedItem<T>>(itemComparator);
+		sortedItemBuySet = new TreeSet<SortedItem<T>>(itemComparator);
 	}
 
 	public SortedSet<SortedItem<T>> getSortedItemSet() {
-		return sortedItemSet;
+		return sortedItemBuySet;
 	}
 
 	public void addSortedItem (SortedItem<T> sortedItem){
-		sortedItemSet.add(sortedItem);
+		sortedItemBuySet.add(sortedItem);
 	}
-	
+		
 	@Override
 	public String toString() {
-		Iterator<SortedItem<T>> iterator = sortedItemSet.iterator();
+		Iterator<SortedItem<T>> iterator = sortedItemBuySet.iterator();
 		StringBuilder output = new StringBuilder();
 		while (iterator.hasNext()){
 			output.append(iterator.next().toString()).append("\n");
 		}
 		return output.toString();
 	}
-
 }
