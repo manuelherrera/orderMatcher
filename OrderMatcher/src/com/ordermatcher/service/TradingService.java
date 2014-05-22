@@ -1,6 +1,8 @@
 package com.ordermatcher.service;
 
+import com.ordermatcher.presentation.OrderMatcherConstants;
 import com.ordermatcher.service.rules.IItemModel;
+import com.ordermatcher.service.rules.ITradingRulesEngine;
 import com.ordermatcher.service.rules.ITradingService;
 import com.ordermatcher.service.rules.ItemModelComparator;
 import com.ordermatcher.service.rules.SortedBook;
@@ -8,19 +10,37 @@ import com.ordermatcher.service.rules.SortedItem;
 
 public class TradingService implements ITradingService {
 
-	private static SortedBook sortedBook = new SortedBook(new ItemModelComparator());
+	private static SortedBook sortedBook = null; 
+	
+	private static ITradingRulesEngine rulesEngine = null;
+	
+	static{
+		sortedBook = new SortedBook(new ItemModelComparator());
+		rulesEngine = new TradingRulesEngine(sortedBook);
+	}
+	
 	
 	@Override
-	public String findMatches(IItemModel item) {
+	public String findMatches(IItemModel item, int index) {
 		
-		//1. Add Sorted Item to Sorted book
-		//addSortedItemToBook(item.getItem());
+		//1. Convert to SortedItem
+		SortedItem sortedItem = buildSortedItem(item, index);
+		
+		//2 Add to Sorted Book
+		addSortedItemToBook(sortedItem);
 		
 		//3. check for trading 
-		return null;
+		String output = rulesEngine.calculateTrading(sortedItem);
+		
+		return output;
 	}
 
-	
+	/**
+	 * 
+	 * @param item
+	 * @param index
+	 * @return
+	 */
 	public SortedItem buildSortedItem(IItemModel item, int index) {
 		if (item == null)
 			return null;
@@ -29,10 +49,21 @@ public class TradingService implements ITradingService {
 		return sortedItem;
 	}
 
+	/**
+	 * 
+	 * @param orderItem
+	 */
 	private void addSortedItemToBook(SortedItem orderItem) {
 		if (orderItem == null)
 			return;
-		sortedBook.addSortedItem(orderItem);
+		
+		if (OrderMatcherConstants.BUY.equals(orderItem.getItem().getCode())){
+			sortedBook.addItemToBuySet(orderItem);
+		}
+		if (OrderMatcherConstants.SELL.equals(orderItem.getItem().getCode())){
+			sortedBook.addItemToSellSet(orderItem);
+		}		
+		
 	}
 
 }
