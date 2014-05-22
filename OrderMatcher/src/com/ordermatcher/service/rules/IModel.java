@@ -1,7 +1,7 @@
 package com.ordermatcher.service.rules;
 
 
-public interface IItem {
+public interface IModel {
  
 	public String getCode();
 	public int getAmount();
