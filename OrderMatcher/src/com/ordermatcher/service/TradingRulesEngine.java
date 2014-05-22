@@ -63,9 +63,9 @@ public class TradingRulesEngine implements ITradingRulesEngine {
 		
 		//1. Look if the price is  higher or equal to the sorted element 
 		if (item.getItem().getPrice() <= price){
-			//item.getItem().setAmount(item.getItem().getAmount() - amount);			
+			item.getItem().setAmount(item.getItem().getAmount() - amount);			
 			if (item.getItem().getAmount() < 0){
-			//	item.getItem().setAmount(0);
+				item.getItem().setAmount(0);
 			}
 			
 			return item.getItem().getAmount();
