@@ -4,7 +4,7 @@ public class OrderItem {
 	
 	private String code;
 	private int amount;
-	private float price;
+	private int price;
 	
 	public String getCode() {
 		return code;
@@ -21,7 +21,7 @@ public class OrderItem {
 	public float getPrice() {
 		return price;
 	}
-	public void setPrice(float price) {
+	public void setPrice(int price) {
 		this.price = price;
 	}
 	
@@ -33,7 +33,7 @@ public class OrderItem {
 	
 	@Override
 	public int hashCode() {
-		return (int) this.price;
+		return this.price;
 	}
 		
 	@Override

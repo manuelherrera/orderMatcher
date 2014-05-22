@@ -1,49 +1,38 @@
 package com.ordermatcher.service;
 
-import com.ordermatcher.model.OrderItem;
-import com.ordermatcher.presentation.OrderMatcherConstants;
+import com.ordermatcher.service.rules.IModel;
 import com.ordermatcher.service.rules.ITradingService;
-import com.ordermatcher.service.rules.ItemComparator;
+import com.ordermatcher.service.rules.ItemModelComparator;
 import com.ordermatcher.service.rules.SortedBook;
 import com.ordermatcher.service.rules.SortedItem;
 
-public class TradingService implements ITradingService<OrderItem> {
+public class TradingService implements ITradingService<SortedItem> {
 
-	private static SortedBook<OrderItem> sortedBook = new SortedBook<OrderItem>(new ItemComparator<OrderItem>());
+	private static SortedBook sortedBook = new SortedBook(new ItemModelComparator());
 	
 	@Override
-	public boolean checkForTrading(OrderItem orderItem) {
+	public String findMatches(SortedItem item) {
 		
-		//1. Build Sorted Item
-		SortedItem<OrderItem> sortedItem = buildSortedItem(orderItem, sortedBook.getSortedItemSet().size());
-		
-		//2. Add Sorted Item to Sorted book
-		addSortedItemToBook(sortedItem);
+		//1. Add Sorted Item to Sorted book
+		//addSortedItemToBook(item.getItem());
 		
 		//3. check for trading 
-		if (OrderMatcherConstants.BUY.equals(orderItem.getCode())){
-			return true;
-		}
-		return false;
+		return null;
 	}
 
-	@Override
-	public void doTrade() {
-		
-	}
 	
-	private SortedItem<OrderItem> buildSortedItem(OrderItem item, int index) {
+	public SortedItem buildSortedItem(IModel item, int index) {
 		if (item == null)
 			return null;
 		String id = new String(index+String.valueOf(item.getPrice()));
-		SortedItem<OrderItem> sortedItem = new SortedItem<OrderItem>(item, id);
+		SortedItem sortedItem = new SortedItem(item, id);
 		return sortedItem;
 	}
 
-	private void addSortedItemToBook(SortedItem<OrderItem> item) {
-		if (item == null)
+	private void addSortedItemToBook(SortedItem orderItem) {
+		if (orderItem == null)
 			return;
-		sortedBook.addSortedItem(item);
+		sortedBook.addSortedItem(orderItem);
 	}
-	
+
 }

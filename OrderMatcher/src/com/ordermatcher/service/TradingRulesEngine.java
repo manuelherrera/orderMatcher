@@ -9,41 +9,37 @@ import com.ordermatcher.service.rules.ITradingRulesEngine;
 import com.ordermatcher.service.rules.SortedBook;
 import com.ordermatcher.service.rules.SortedItem;
 
-public class TradingRulesEngine implements ITradingRulesEngine<OrderItem> {
+public class TradingRulesEngine implements ITradingRulesEngine<SortedItem> {
 
-	private SortedBook<OrderItem> book;
+	private SortedBook book;
 	
 	/**
 	 * 
 	 * @param book
 	 */
-	public TradingRulesEngine(SortedBook<OrderItem> book) {
+	public TradingRulesEngine(SortedBook book) {
 		this.book = book;
 	}
 
 	@Override
-	public String calculateTrading(OrderItem orderItem) {
-		SortedSet<SortedItem<OrderItem>>  sortedItemSetShadow = new TreeSet<SortedItem<OrderItem>>(book.getSortedItemSet()); 
+	public String calculateTrading(SortedItem orderItem) {
+		SortedSet<SortedItem>  sortedItemSetShadow = new TreeSet<SortedItem>(book.getSortedItemSet()); 
 		
-		Iterator<SortedItem<OrderItem>> iterator = sortedItemSetShadow.iterator();
+		Iterator<SortedItem> iterator = sortedItemSetShadow.iterator();
 		
-		float price = orderItem.getPrice();
-		int amount = orderItem.getAmount();
+		float price = orderItem.getItem().getPrice();
+		int amount = orderItem.getItem().getAmount();
 				
 		int amountCheck = 1;
 		int index = -1;
 		
-		do{
-		
-			SortedItem<OrderItem> item = iterator.next();
+		do{		
+			SortedItem item = iterator.next();
 			if (item != null){
 
-				amountCheck = checkForAMatch(item, price, amount) ;
-				
+				amountCheck = checkForAMatch(item, price, amount) ;				
 				iterator.remove();
-				
 				item = iterator.next();
-				
 				index++;//Index number of the sorted book
 				
 			}else{
@@ -63,22 +59,19 @@ public class TradingRulesEngine implements ITradingRulesEngine<OrderItem> {
 	 * 
 	 * @return
 	 */
-	private int checkForAMatch(SortedItem<OrderItem> item, float price, int amount){
+	private int checkForAMatch(SortedItem item, float price, int amount){
 		
 		//1. Look if the price is  higher or equal to the sorted element 
 		if (item.getItem().getPrice() <= price){
-			item.getItem().setAmount(item.getItem().getAmount() - amount);
-			
+			//item.getItem().setAmount(item.getItem().getAmount() - amount);			
 			if (item.getItem().getAmount() < 0){
-				item.getItem().setAmount(0);
+			//	item.getItem().setAmount(0);
 			}
 			
 			return item.getItem().getAmount();
 		}
 		
-		
 		return Integer.MIN_VALUE;
-		
 	}
 	
 }

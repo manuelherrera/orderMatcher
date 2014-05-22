@@ -7,7 +7,7 @@ import com.ordermatcher.service.rules.SortedItem;
 
 public class OrderMatcherService {
 
-	private static ITradingService<OrderItem> tradingService = new TradingService();
+	private static ITradingService<SortedItem> tradingService = (ITradingService<SortedItem>) new TradingService();
 			
 	private static OrderItemBook book = new OrderItemBook();
 	
