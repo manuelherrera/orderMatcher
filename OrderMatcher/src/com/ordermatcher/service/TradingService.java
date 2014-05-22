@@ -35,6 +35,11 @@ public class TradingService implements ITradingService {
 		return output;
 	}
 
+	@Override
+	public String printBook() {
+		// TODO Auto-generated method stub
+		return sortedBook.toString();
+	}
 	/**
 	 * 
 	 * @param item
