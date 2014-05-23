@@ -68,7 +68,7 @@ public class OrderMatcher {
 		}
 		while (!answer.contentEquals("exit"));
 		if (answer.contentEquals("exit")){
-			System.out.println("See you later...!!!, next time");
+			System.out.println("Thank you for using this application ...");
 			
 		}
 		System.exit(0);
