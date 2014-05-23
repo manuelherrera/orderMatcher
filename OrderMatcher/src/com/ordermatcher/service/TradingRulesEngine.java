@@ -4,14 +4,16 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.SortedSet;
-import java.util.TreeSet;
 
 import com.ordermatcher.presentation.OrderMatcherConstants;
 import com.ordermatcher.service.rules.ITradingRulesEngine;
-import com.ordermatcher.service.rules.ItemModelComparator;
 import com.ordermatcher.service.rules.SortedBook;
 import com.ordermatcher.service.rules.SortedItem;
-
+/**
+ * 
+ * @author Jose
+ *
+ */
 public class TradingRulesEngine implements ITradingRulesEngine {
 
 	private SortedBook book;
@@ -24,6 +26,9 @@ public class TradingRulesEngine implements ITradingRulesEngine {
 		this.book = book;
 	}
 
+	/**
+	 * 
+	 */
 	@Override
 	public String calculateTrading(SortedItem orderItem) {
 		
@@ -39,7 +44,7 @@ public class TradingRulesEngine implements ITradingRulesEngine {
 		SortedSet<SortedItem> sellSet = book.getSellSetClone(); 
 		SortedSet<SortedItem> buySet = book.getBuySetClone(); 
 		
-		//Check for SELL OR BUY
+		//Check for SELL OR BUY and select the correct Set structure
 		if (code.equals(OrderMatcherConstants.BUY)){
 			
 			sortedItemSetShadow = sellSet; 
@@ -51,17 +56,22 @@ public class TradingRulesEngine implements ITradingRulesEngine {
 		}else{
 			return null; // Save check and not accept other codes besides BUY and SELL
 		}
+		
+		// return null in the case we dont need to analyze anything
 		if (sortedItemSetShadow.size() == 0){
 			return null;
 		}
 		
+		// Set the iterator
 		Iterator<SortedItem> iterator = sortedItemSetShadow.iterator();
 		
+		// Set price and amounts to start doing calculations
 		float price = orderItem.getItem().getPrice();
 		int amount = orderItem.getItem().getAmount();
 				
 		int amountCheck = 1;
 		
+		//String buffer for Trading if matches exists
 		StringBuilder output = new StringBuilder();
 		
 		boolean flag = true;
@@ -70,6 +80,7 @@ public class TradingRulesEngine implements ITradingRulesEngine {
 			
 			if (iterator.hasNext()){
 				SortedItem item = iterator.next();
+				//All operations will be done by a clone to provide rollbacks as needed.
 				SortedItem itemClone = item.clone();
 				
 				int tradePrice = item.getItem().getPrice(); 
@@ -81,6 +92,7 @@ public class TradingRulesEngine implements ITradingRulesEngine {
 					amountCheck = checkForABuyMatch(item, price, amount);
 				}
 				
+				//Case when the sell order amount is higher from the buy order amount
 				if (amountCheck > 0){
 					output.append(OrderMatcherConstants.TRADE).append( "\t").
 						   append(tradeAmount - amountCheck).append("@").
@@ -88,7 +100,7 @@ public class TradingRulesEngine implements ITradingRulesEngine {
 					//Pending 
 					amount = amount - tradeAmount;
 					
-					
+				// Case when we need to remove the 0 from the order book	
 				}else if(amountCheck == 0){
 					output.append(OrderMatcherConstants.TRADE).append( "\t").
 					   append(tradeAmount - amountCheck).append("@").
@@ -104,14 +116,12 @@ public class TradingRulesEngine implements ITradingRulesEngine {
 				}else{
 					amountCheck = Integer.MIN_VALUE;
 				}
-				
-				
 			}
 			
 		}while (amountCheck != Integer.MIN_VALUE && amount > 0 && flag);
 
 		iterator = null;
-		
+		//Case when we need to add the order to the order book
 		if (amountCheck == Integer.MIN_VALUE){
 			if (code.equals(OrderMatcherConstants.BUY)){
 				book.getBuySet().add(orderItem);	
@@ -121,7 +131,7 @@ public class TradingRulesEngine implements ITradingRulesEngine {
 			//returnValue = null;
 			output.setLength(0);
 		}else if(amount <= 0  || flag){
-			
+			// Case when we need to update the order book with the correct calculations
 			if (code.equals(OrderMatcherConstants.BUY)){
 				sellSet.removeAll(removeItemList);
 				book.setSellSet(sellSet);	

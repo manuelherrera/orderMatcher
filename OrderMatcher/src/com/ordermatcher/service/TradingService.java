@@ -15,6 +15,7 @@ public class TradingService implements ITradingService {
 	private static ITradingRulesEngine rulesEngine = null;
 	
 	static{
+		//Since we can't use Spring, we wanted to simulate a singleton behavior
 		sortedBook = new SortedBook(new ItemModelComparator());
 		rulesEngine = new TradingRulesEngine(sortedBook);
 	}
