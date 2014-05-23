@@ -61,5 +61,16 @@ public class OrderItem implements IItemModel{
 		return flag;
 	}
 	
+	@Override
+	public IItemModel clone() {
+		// TODO Auto-generated method stub
+		IItemModel model = new OrderItem();
+		
+		model.setAmount(amount);
+		model.setPrice(price);
+		model.setCode(code);
+		
+		return model;
+	}
 	
 }

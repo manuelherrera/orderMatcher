@@ -40,20 +40,34 @@ public class SortedBook{
 		buySet.add(item);		
 	}
 	
+	public SortedSet<SortedItem> getSellSetClone() {
+		SortedSet<SortedItem> set = new TreeSet<SortedItem>(new ItemModelComparator());
+		for(SortedItem item : sellSet){
+			set.add(item.clone());
+		}
+		return set;
+	}
+
 	public SortedSet<SortedItem> getSellSet() {
 		return sellSet;
 	}
-
 
 	public void setSellSet(SortedSet<SortedItem> sellSet) {
 		this.sellSet = sellSet;
 	}
 
 
+	public SortedSet<SortedItem> getBuySetClone() {
+		SortedSet<SortedItem> set = new TreeSet<SortedItem>(new ItemModelComparator());
+		for(SortedItem item : buySet){
+			set.add(item.clone());
+		}
+		return set;
+	}
+
 	public SortedSet<SortedItem> getBuySet() {
 		return buySet;
 	}
-
 
 	public void setBuySet(SortedSet<SortedItem> buySet) {
 		this.buySet = buySet;

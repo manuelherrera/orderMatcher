@@ -11,6 +11,17 @@ public class OrderMatcherService {
 			
 	private static OrderItemBook book = new OrderItemBook();
 	
+	public OrderMatcherService(){
+		
+	}
+	
+	public OrderMatcherService(boolean init){
+		if (init){
+			tradingService =  new TradingService(true);
+			book = new OrderItemBook();
+		}
+	}
+	
 	/**
 	 * 
 	 * @param orderItem

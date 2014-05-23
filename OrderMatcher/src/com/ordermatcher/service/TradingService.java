@@ -19,6 +19,17 @@ public class TradingService implements ITradingService {
 		rulesEngine = new TradingRulesEngine(sortedBook);
 	}
 	
+	public TradingService(){
+		
+	}
+	
+	public TradingService(boolean init){
+		
+		if(init){
+			sortedBook = new SortedBook(new ItemModelComparator());
+			rulesEngine = new TradingRulesEngine(sortedBook);
+		}
+	}	
 	
 	@Override
 	public String findMatches(IItemModel item, int index) {

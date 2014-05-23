@@ -10,5 +10,7 @@ public interface IItemModel {
 	public void setCode(String code);
 	public void setAmount(int amount) ;
 	public void setPrice(int price);
+	
+	public IItemModel clone ();
  
 }

@@ -35,13 +35,19 @@ public class TradingRulesEngine implements ITradingRulesEngine {
 		// Obtain code
 		String code = orderItem.getItem().getCode();
 		
+		//Obtain clones
+		SortedSet<SortedItem> sellSet = book.getSellSetClone(); 
+		SortedSet<SortedItem> buySet = book.getBuySetClone(); 
+		
 		//Check for SELL OR BUY
 		if (code.equals(OrderMatcherConstants.BUY)){
-			sortedItemSetShadow = new TreeSet<SortedItem>(new ItemModelComparator()); 
-			sortedItemSetShadow.addAll(book.getSellSet());
+			
+			sortedItemSetShadow = sellSet; 
+		
 		}else if(code.equals(OrderMatcherConstants.SELL)){
-			sortedItemSetShadow = new TreeSet<SortedItem>(new ItemModelComparator());
-			sortedItemSetShadow.addAll(book.getBuySet());
+
+			sortedItemSetShadow = buySet;
+
 		}else{
 			return null; // Save check and not accept other codes besides BUY and SELL
 		}
@@ -58,35 +64,54 @@ public class TradingRulesEngine implements ITradingRulesEngine {
 		
 		StringBuilder output = new StringBuilder();
 		
+		boolean flag = true;
+		
 		do{		
 			
-			SortedItem item = iterator.next();
-			int tradePrice = item.getItem().getPrice(); 
-			int tradeAmount = item.getItem().getAmount();
-			
-			if (code.equals(OrderMatcherConstants.BUY)){
-				amountCheck = checkForASellMatch(item, price, amount);	
-			}else if(code.equals(OrderMatcherConstants.SELL)){
-				amountCheck = checkForABuyMatch(item, price, amount);
-			}
-			
-			if (amountCheck > 0){
-				output.append(OrderMatcherConstants.TRADE).append( "\t").
+			if (iterator.hasNext()){
+				SortedItem item = iterator.next();
+				SortedItem itemClone = item.clone();
+				
+				int tradePrice = item.getItem().getPrice(); 
+				int tradeAmount = item.getItem().getAmount();
+				
+				if (code.equals(OrderMatcherConstants.BUY)){
+					amountCheck = checkForASellMatch(item, price, amount);	
+				}else if(code.equals(OrderMatcherConstants.SELL)){
+					amountCheck = checkForABuyMatch(item, price, amount);
+				}
+				
+				if (amountCheck > 0){
+					output.append(OrderMatcherConstants.TRADE).append( "\t").
+						   append(tradeAmount - amountCheck).append("@").
+						   append(tradePrice).append("\n");
+					//Pending 
+					amount = amount - tradeAmount;
+					
+					
+				}else if(amountCheck == 0){
+					output.append(OrderMatcherConstants.TRADE).append( "\t").
 					   append(tradeAmount - amountCheck).append("@").
 					   append(tradePrice).append("\n");
+					removeItemList.add(itemClone);
+					iterator.remove();
+					//Pending 
+					amount = amount - tradeAmount;
+				}
+			}else{
+				if (amount >= 0){
+					flag = false;
+				}else{
+					amountCheck = Integer.MIN_VALUE;
+				}
 				
-			}else if(amountCheck == 0){
-				removeItemList.add(item);
+				
 			}
-			//Pending 
-			amount = amount - tradeAmount;
 			
-		}while (amountCheck != Integer.MIN_VALUE && amount >= 0 );
+		}while (amountCheck != Integer.MIN_VALUE && amount > 0 && flag);
 
 		iterator = null;
 		
-		//Remove sorted items
-		sortedItemSetShadow.removeAll(removeItemList);
 		if (amountCheck == Integer.MIN_VALUE){
 			if (code.equals(OrderMatcherConstants.BUY)){
 				book.getBuySet().add(orderItem);	
@@ -95,13 +120,15 @@ public class TradingRulesEngine implements ITradingRulesEngine {
 			}	
 			//returnValue = null;
 			output.setLength(0);
-		}else if(amount < 0){
+		}else if(amount <= 0  || flag){
 			
 			if (code.equals(OrderMatcherConstants.BUY)){
-				book.setSellSet(sortedItemSetShadow);	
+				sellSet.removeAll(removeItemList);
+				book.setSellSet(sellSet);	
 			}else if(code.equals(OrderMatcherConstants.SELL)){
-				book.setBuySet(sortedItemSetShadow);
-			}
+				buySet.removeAll(removeItemList);
+				book.setBuySet(buySet);
+			}	
 			
 			returnValue = output.toString();
 		}

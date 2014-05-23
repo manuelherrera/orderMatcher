@@ -29,5 +29,17 @@ public class SortedItem {
 		
 		return output.toString();
 	}
+	 
+	/*
+
+	 */
+	public SortedItem clone (){
+		
+		IItemModel model = getItem().clone();
+		
+		SortedItem item = new SortedItem(model, getId());
+		
+		return item;
+	}
 	
 }
