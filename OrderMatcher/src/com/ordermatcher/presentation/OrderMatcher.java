@@ -67,8 +67,10 @@ public class OrderMatcher {
 			}
 		}
 		while (!answer.contentEquals("exit"));
-		if (answer.contentEquals("yes")){
+		if (answer.contentEquals("exit")){
 			System.out.println("See you later...!!!, next time");
+			
 		}
+		System.exit(0);
 	}
 }
