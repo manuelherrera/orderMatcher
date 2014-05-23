@@ -7,7 +7,7 @@ import com.ordermatcher.service.OrderMatcherService;
 
 public class OrderMatcher {
 
-	OrderMatcherService orderMatcherService = null;
+	OrderMatcherService orderMatcherService = new OrderMatcherService();
 	
 	private OrderItem gettingInputValues() throws Exception{
 		OrderItem item = null;
@@ -46,7 +46,7 @@ public class OrderMatcher {
 	private String findMatch(OrderItem item){
 		
 		if (!item.equals(null) && !item.getCode().equalsIgnoreCase("exit")){
-			orderMatcherService = new OrderMatcherService();
+			//orderMatcherService ;
 			System.out.print(orderMatcherService.computeCommand(item));		
 		}
 		
