@@ -40,6 +40,7 @@ public class OrderMatcher {
 				item.setPrice(0);
 			}
 			
+		inputCode.close();
 		return item;
 	}	
 		

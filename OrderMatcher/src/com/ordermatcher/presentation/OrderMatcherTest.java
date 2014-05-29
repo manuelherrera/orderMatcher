@@ -3,6 +3,8 @@
  */
 package com.ordermatcher.presentation;
 
+import java.util.Date;
+
 import com.ordermatcher.model.OrderItem;
 import com.ordermatcher.service.OrderMatcherService;
 
@@ -44,11 +46,9 @@ public class OrderMatcherTest {
 	
 	public static void testcase1(){
 		OrderMatcherService service = new OrderMatcherService(true);
-		
 		long time = System.currentTimeMillis();
-		System.out.println("Begin time : " + time + "\n\n");
 		
-		System.out.println("------------------TESTCASE 1-------------");
+		System.out.println("\n------------------TESTCASE 1-------------");
 		OrderItem item = new OrderItem();
 		
 		item = buildOrderItem(OrderMatcherConstants.SELL, 100, 10);
@@ -67,17 +67,16 @@ public class OrderMatcherTest {
 		System.out.println(item);
 		System.out.print(service.computeCommand(item));
 		
-		time = System.currentTimeMillis() - time;
-		System.out.println("End time : " + time + "\n\n");		
+		showStatistics(time);
+		System.out.println("------------------END TESTCASE 1-------------");			
 	}
 	
 	public static void testcase2(){
 		OrderMatcherService service = new OrderMatcherService(true);
 
 		long time = System.currentTimeMillis();
-		System.out.println("End time : " + time + "\n\n");
 		
-		System.out.println("------------------TESTCASE 2-------------");		
+		System.out.println("\n------------------TESTCASE 2-------------");		
 		OrderItem item = new OrderItem();
 		
 		item = buildOrderItem(OrderMatcherConstants.SELL, 50, 10);
@@ -96,17 +95,16 @@ public class OrderMatcherTest {
 		System.out.println(item);
 		System.out.print(service.computeCommand(item));		
 		
-		time = System.currentTimeMillis() - time;
-		System.out.println("End time : " + time + "\n\n");		
+		showStatistics(time);	
+		System.out.println("------------------END TESTCASE 2-------------");			
 	}
 	
 	public static void testcase3(){
 		OrderMatcherService service = new OrderMatcherService(true);
 		
 		long time = System.currentTimeMillis();
-		System.out.println("Begin time : " + time + "\n\n");
-		
-		System.out.println("------------------TESTCASE 3-------------");		
+	
+		System.out.println("\n------------------TESTCASE 3-------------");		
 		OrderItem item = new OrderItem();
 		
 		item = buildOrderItem(OrderMatcherConstants.SELL, 100, 10);
@@ -125,17 +123,16 @@ public class OrderMatcherTest {
 		System.out.println(item);
 		System.out.print(service.computeCommand(item));		
 		
-		time = System.currentTimeMillis() - time;
-		System.out.println("End time : " + time + "\n\n");		
+		showStatistics(time);		
+		System.out.println("------------------END TESTCASE 3-------------");			
 	}	
 	
 	public static void testcase4(){
 		OrderMatcherService service = new OrderMatcherService(true);
 		
 		long time = System.currentTimeMillis();
-		System.out.println("Begin time : " + time + "\n\n");
-		
-		System.out.println("------------------TESTCASE 4-------------");		
+	
+		System.out.println("\n------------------TESTCASE 4-------------");		
 		OrderItem item = new OrderItem();
 		
 		item = buildOrderItem(OrderMatcherConstants.SELL, 100, 10);
@@ -154,17 +151,16 @@ public class OrderMatcherTest {
 		System.out.println(item);
 		System.out.print(service.computeCommand(item));		
 		
-		time = System.currentTimeMillis() - time;
-		System.out.println("End time : " + time + "\n\n");		
+		showStatistics(time);	
+		System.out.println("------------------END TESTCASE 4-------------");			
 	}
 	
 	public static void testcase5(){
 		OrderMatcherService service = new OrderMatcherService(true);
 		
 		long time = System.currentTimeMillis();
-		System.out.println("Begin time : " + time + "\n\n");
 		
-		System.out.println("------------------TESTCASE 5-------------");		
+		System.out.println("\n------------------TESTCASE 5-------------");		
 		OrderItem item = new OrderItem();
 		
 		item = buildOrderItem(OrderMatcherConstants.SELL, 100, 5);
@@ -187,7 +183,20 @@ public class OrderMatcherTest {
 		System.out.println(item);
 		System.out.print(service.computeCommand(item));	
 		
+		showStatistics(time);	
+		System.out.println("------------------END TESTCASE 5-------------");			
+	}		
+	
+	/**
+	 * 
+	 */
+	public static void showStatistics(long time){
+		System.out.println("\n------------------------------- ");	
+		System.out.println("Statistics ");
+		System.out.println("------------------------------- ");	
+		System.out.println("Begin time : " + new Date(time) );		
 		time = System.currentTimeMillis() - time;
-		System.out.println("End time : " + time + "\n\n");			
-	}			
+		System.out.println("End time : " + new Date(System.currentTimeMillis()));	
+		System.out.println("Processing time : " + time);	
+	}
 }

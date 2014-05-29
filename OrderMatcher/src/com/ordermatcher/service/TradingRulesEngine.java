@@ -33,33 +33,34 @@ public class TradingRulesEngine implements ITradingRulesEngine {
 	public String calculateTrading(SortedItem orderItem) {
 		
 		String returnValue = null;
+
+		// Obtain code
+		String code = orderItem.getItem().getCode();		
 		
 		SortedSet<SortedItem>  sortedItemSetShadow = null;
 		Collection<SortedItem> removeItemList = new LinkedList<SortedItem>();
+	
+		// return null in the case we dont need to analyze anything
+		if ((book.getBuySet().size() == 0 && OrderMatcherConstants.SELL.endsWith(code)) ||
+			(book.getSellSet().size() == 0 && OrderMatcherConstants.BUY.endsWith(code))){
+			return null;
+		}else if (!code.equals(OrderMatcherConstants.BUY) && code.equals(OrderMatcherConstants.SELL)){
+			// Save check and not accept other codes besides BUY and SELL
+			return null;
+		}
 		
-		// Obtain code
-		String code = orderItem.getItem().getCode();
-		
-		//Obtain clones
-		SortedSet<SortedItem> sellSet = book.getSellSetClone(); 
-		SortedSet<SortedItem> buySet = book.getBuySetClone(); 
+		//Declare Clone Sets
+		SortedSet<SortedItem> sellSet = null, buySet = null ; 
 		
 		//Check for SELL OR BUY and select the correct Set structure
 		if (code.equals(OrderMatcherConstants.BUY)){
-			
+			sellSet = book.getSellSetClone(); 
 			sortedItemSetShadow = sellSet; 
 		
 		}else if(code.equals(OrderMatcherConstants.SELL)){
-
+			buySet = book.getBuySetClone();
 			sortedItemSetShadow = buySet;
 
-		}else{
-			return null; // Save check and not accept other codes besides BUY and SELL
-		}
-		
-		// return null in the case we dont need to analyze anything
-		if (sortedItemSetShadow.size() == 0){
-			return null;
 		}
 		
 		// Set the iterator
@@ -94,7 +95,7 @@ public class TradingRulesEngine implements ITradingRulesEngine {
 				
 				//Case when the sell order amount is higher from the buy order amount
 				if (amountCheck > 0){
-					output.append(OrderMatcherConstants.TRADE).append( "\t").
+					output.append( "  ").append(OrderMatcherConstants.TRADE).append( "\t").
 						   append(tradeAmount - amountCheck).append("@").
 						   append(tradePrice).append("\n");
 					//Pending 
@@ -102,7 +103,7 @@ public class TradingRulesEngine implements ITradingRulesEngine {
 					
 				// Case when we need to remove the 0 from the order book	
 				}else if(amountCheck == 0){
-					output.append(OrderMatcherConstants.TRADE).append( "\t").
+					output.append( "  ").append(OrderMatcherConstants.TRADE).append( "\t").
 					   append(tradeAmount - amountCheck).append("@").
 					   append(tradePrice).append("\n");
 					removeItemList.add(itemClone);
@@ -119,7 +120,7 @@ public class TradingRulesEngine implements ITradingRulesEngine {
 			}
 			
 		}while (amountCheck != Integer.MIN_VALUE && amount > 0 && flag);
-
+		// close the iterator
 		iterator = null;
 		//Case when we need to add the order to the order book
 		if (amountCheck == Integer.MIN_VALUE){
